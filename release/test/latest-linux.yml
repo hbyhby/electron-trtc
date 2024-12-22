@@ -1,0 +1,8 @@
+version: 1.0.1
+files:
+  - url: http://localhost:5000/updates/test/App-1.0.1.zip
+    sha512: test-sha512-hash
+    size: 1024 * 1024
+path: /updates/test
+releaseDate: 2024-12-22T14:41:44.491Z
+releaseNotes: 这是一个测试更新版本
