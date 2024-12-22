@@ -3,8 +3,10 @@ import { ipcMain, dialog } from 'electron';
 import { APP_CONFIG } from '../config';
 import log from 'electron-log';
 import { app } from 'electron';
+import { getMainWindow } from '../windows/main';
 
-export function setupAutoUpdater(mainWindow) {
+export function setupAutoUpdater() {
+  const mainWindow = getMainWindow();
   // 配置日志
   log.initialize({ preload: true });
   const logger = log.create('updater');

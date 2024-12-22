@@ -6,7 +6,10 @@ let mainWin: BrowserWindow | null = null;
 let annotationWin: BrowserWindow | null = null;
 
 const SCREEN_POSITION_OFFSET = 100;
-
+/**
+ * 初始化标注窗口
+ * @param win 主窗口实例
+ */
 export function initAnnotationWindow(win: BrowserWindow) {
   mainWin = win;
   createAnnotationWindow();
@@ -16,6 +19,10 @@ export function initAnnotationWindow(win: BrowserWindow) {
   monitoringIpcEvents();
 }
 
+/**
+ * 创建标注窗口
+ * 配置窗口属性：透明、无框架、始终置顶等
+ */
 export function createAnnotationWindow() {
   const win = new BrowserWindow({
     title: 'Annotation window',
@@ -42,6 +49,10 @@ export function createAnnotationWindow() {
   annotationWin = win;
 }
 
+/**
+ * 加载标注窗口的页面内容
+ * 根据环境（开发/生产）加载不同的页面源
+ */
 function loadAnnotationFile() {
   if (app.isPackaged) {
     annotationWin?.loadFile(join(__dirname, `../../renderer/index.html`), {
@@ -59,6 +70,10 @@ function loadAnnotationFile() {
   });
 }
 
+/**
+ * 监听标注窗口事件
+ * 处理窗口关闭逻辑
+ */
 function monitoringAnnotationWindowEvents() {
   annotationWin?.on('close', event => {
     if (mainWin !== null) {
@@ -69,6 +84,10 @@ function monitoringAnnotationWindowEvents() {
   });
 }
 
+/**
+ * 监听主窗口事件
+ * 处理应用退出和主窗口关闭的情况
+ */
 function monitoringMainWindowEvents() {
   app.on('window-all-closed', () => {
     mainWin = null;
@@ -84,6 +103,10 @@ function monitoringMainWindowEvents() {
   });
 }
 
+/**
+ * 监听 IPC 事件
+ * 处理标注功能相关的所有进程间通信
+ */
 function monitoringIpcEvents() {
   ipcMain.on('app-exit', () => {
     annotationWin?.close();
@@ -124,7 +147,8 @@ function monitoringIpcEvents() {
 
   ipcMain.on('annotation:screen-share-started', (event, params: { x: number; y: number }) => {
     const { screenX, screenY } = calculateScreenPosition(params.x, params.y);
-    let selectedScreen;
+    let selectedScreen: Electron.Display | undefined;
+    
     screen.getAllDisplays().forEach(item => {
       if (
         Math.abs(screenX - item.workArea.x * item.scaleFactor) < SCREEN_POSITION_OFFSET &&
@@ -166,6 +190,13 @@ function monitoringIpcEvents() {
   });
 }
 
+/**
+ * 计算屏幕实际位置
+ * 处理大于 32 位无符号整数的情况
+ * @param screenPositionX X 坐标
+ * @param screenPositionY Y 坐标
+ * @returns 处理后的屏幕坐标
+ */
 function calculateScreenPosition(
   screenPositionX: number,
   screenPositionY: number

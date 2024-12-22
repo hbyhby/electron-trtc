@@ -18,9 +18,8 @@ const defaultRouterList: Array<RouteRecordRaw> = [
   },
   {
     path: '/',
-   redirect: '/dashboard/base',
-
-    // redirect: '/trtc/home',
+  //  redirect: '/dashboard/base',
+     redirect: '/trtc/home',
   },
   {
     path: '/trtc',
